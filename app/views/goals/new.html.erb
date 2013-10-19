@@ -1,0 +1,21 @@
+<h1>New Goal</h1>
+<%= flash.now[:errors] %>
+<form action="<%= user_goals_url(current_user) %>" method="post" accept-charset="utf-8">
+	<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+
+	<label for="name">Name</label><input type="text" name="goal[name]" value="<%= @goal.name %>" id="name">
+
+	<% if @goal.goal_type == 'private' %>
+	<% private = 'checked' %>
+	<% elsif @goal.goal_type == 'public' %>
+	<% public = 'checked' %>
+	<% end %>
+<label for="public">Public</label>
+<input type="radio" name="goal[goal_type]" value="public" id="public" <%= public %> >
+<label for="private">Private</label>
+<input type="radio" name="goal[goal_type]" value="private" id="private" <%= private %> >
+
+<input type="hidden" name="goal[user_id]" value="<%= current_user.id %>" id="goal[user_id]">
+
+	<p><input type="submit" value="Create New Goal"></p>
+</form>

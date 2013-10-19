@@ -8,6 +8,8 @@ class User < ActiveRecord::Base
 
   before_validation :ensure_session_token
 
+  has_many :goals
+
   def ensure_session_token
     self.session_token ||= User.generate_session_token
   end

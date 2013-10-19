@@ -45,9 +45,28 @@ def sign_up
   click_button 'Sign Up'
 end
 
+def sign_up_as_helloworld
+  visit('/users/new')
+  fill_in 'username', :with => 'helloworld'
+  fill_in 'password', :with => '123123'
+  click_button 'Sign Up'
+end
+
 def sign_in
   visit('/session/new')
   fill_in 'username', :with => 'testing_username'
   fill_in 'password', :with => 'biscuits'
   click_button 'Sign In'
+end
+
+def make_public_goal
+  fill_in('Name', :with => 'whatever you want')
+  choose('Public')
+  click_button 'Create New Goal'
+end
+
+def make_private_goal
+  fill_in('Name', :with => 'whatever private wants')
+  choose('Private')
+  click_button 'Create New Goal'
 end

@@ -1,93 +1,99 @@
 require 'spec_helper'
 
-describe Goals do
-  describe "main page" do
+describe Goal do
+  describe "on the other user's goal page" do
     before(:each) do
       sign_up
-      visit goals_url
+      make_public_goal
+      make_private_goal
+      click_button "Sign Out"
+      sign_up_as_helloworld
+      visit '/users/1/goals'
     end
 
-    it "shows all the goals of a user" do
-      expect(page).to have_content "Goal Setter"
+    it "shows only public goals of testing_username" do
+      expect(page).to have_content "whatever you want"
+      expect(page).not_to have_content "whatever private wants"
+    end
+  end
+
+  describe "on user's goal page" do
+    before(:each) do
+      sign_up
+
+    end
+
+    it "shows all the goals of a specific user" do
+      expect(page).to have_content "My Goals"
     end
 
     it "should have link to create new goal" do
       expect(page).to have_link('New Goal')
     end
-
   end
 
   describe "the process of making new goals" do
     before(:each) do
       sign_up
-      visit new_goal_url
+      click_link "New Goal"
     end
 
     it "takes a name, type" do
       expect(page).to have_content "Name"
-      expect(page).to have_content "Public"
-      expect(page).to have_content "Private"
+      expect(page).to have_content "public"
+      expect(page).to have_content "private"
     end
 
     it "validates the presence of name, type" do
       click_button 'Create New Goal'
       expect(page).to have_content "Name can't be blank"
-      expect(page).to have_content "Goal Type can't be blank"
-      end
+      expect(page).to have_content "Goal type can't be blank"
+    end
 
+    it "shows goal info on the user's show page after creating goal" do
+      make_public_goal
+      expect(page).to have_content "whatever you want"
+      expect(page).to have_content "testing_username"
+      expect(page).to have_content "INCOMPLETE"
     end
 
   end
 
-    it "validates the presence of the user's username" do
-      click_button 'Sign Up'
-      expect(page).to have_content "Sign Up"
-      expect(page).to have_content "Username can't be blank"
-    end
-
-    it "validates the presence of the user's password" do
-      fill_in "Username", :with => "hello_world"
-      click_button 'Sign Up'
-      expect(page).to have_content "Sign Up"
-      expect(page).to have_content "Password can't be blank"
-    end
-
-    it "validates that the password length is at least 6 characters long" do
-      fill_in "Username", :with => "hello_world"
-      fill_in "Password", :with => "a"
-      click_button 'Sign Up'
-      expect(page).to have_content "Sign Up"
-      expect(page).to have_content "Password is too short"
-    end
-
-    it "has a sign out button" do
+  describe "the process of editing a goal" do
+    before(:each) do
       sign_up
-      expect(page).to have_button "Sign Out"
+      click_link ("New Goal")
+      make_public_goal
+      click_link ("whatever you want")
     end
 
-    describe "signing up a user" do
-      it "shows username on the homepage after signup" do
-        sign_up
-        expect(page).to have_content "testing_username"
-      end
+    it "shows name, type all filled in" do
+      expect(page).to have_content "whatever you want"
+    end
 
-      it "redirects to goal page after signup" do
-        sign_up
-        expect(page).to have_content "Goal Setter"
-      end
+    it "shows changes made to a goal" do
+      choose('Private')
+      click_button("Edit Goal")
+      expect(page).to have_content "private"
+    end
+
+    it "shows changes made to a goal" do
+      choose('Complete')
+      click_button("Edit Goal")
+      expect(page).to have_content "COMPLETE"
     end
   end
 
-  describe "Signing out" do
-    it "begins with signed out state" do
-      visit goals_url
-      expect(page).to have_content "Sign In"
+  describe "the process of deleting a goal" do
+    before(:each) do
+      sign_up
+      click_link ("New Goal")
+      make_public_goal
     end
 
-    it "doesn't show username on the homepage after Sign Out" do
-      sign_up
-      click_button('Sign Out')
-      expect(page).not_to have_content 'testing_username'
+    it "removes the goal from user's show page" do
+      click_button "Delete Goal"
+      expect(page).not_to have_content "whatever you want"
     end
   end
 end

@@ -1,1 +1,11 @@
 <h1>Goal Setter</h1>
+<h2>My Goals</h2>
+
+<% @goals.try(:each) do |goal| %>
+	<li>Name</li>
+	<li><%= link_to goal.name, edit_user_goal_url(current_user, goal) %></li>
+	<li><%= goal.goal_type %></li>
+	<li><%= goal.status %></li>
+	<li><%= button_to "Delete Goal", user_goal_url(current_user, goal), :method => :delete %>
+<% end %>
+<%= link_to "New Goal", new_user_goal_url(current_user) %>

@@ -56,7 +56,7 @@ describe User do
 
   describe "Signing out" do
     it "begins with signed out state" do
-      visit goals_url
+      visit user_goals_url(1)
       expect(page).to have_content "Sign In"
     end
 

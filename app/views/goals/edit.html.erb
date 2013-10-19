@@ -1,0 +1,34 @@
+<h1>Edit Goal</h1>
+<%= flash.now[:errors] %>
+<form action="<%= user_goal_url(current_user, @goal) %>" method="post" accept-charset="utf-8">
+
+	<input type="hidden" name="_method" value="put">
+	<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+
+	<label for="name">Name</label><input type="text" name="goal[name]" value="<%= @goal.name %>" id="name">
+	<br>
+	<% if @goal.goal_type == 'private' %>
+	<% private = 'checked' %>
+	<% elsif @goal.goal_type == 'public' %>
+	<% public = 'checked' %>
+	<% end %>
+<label for="public">Public</label>
+<input type="radio" name="goal[goal_type]" value="public" id="public" <%= public %> >
+<label for="private">Private</label>
+<input type="radio" name="goal[goal_type]" value="private" id="private" <%= private %> >
+<br>
+<% if @goal.status == 'INCOMPLETE' %>
+<% incomplete = 'checked' %>
+<% elsif @goal.status == 'COMPLETE' %>
+<% complete = 'checked' %>
+<% end %>
+
+<label for="complete">Complete</label>
+<input type="radio" name="goal[status]" value="COMPLETE" id="complete" <%= complete %> >
+<label for="incomplete">Incomplete</label>
+<input type="radio" name="goal[status]" value="INCOMPLETE" id="incomplete" <%= incomplete %> >
+
+<input type="hidden" name="goal[user_id]" value="<%= current_user.id %>" id="goal[user_id]">
+
+	<p><input type="submit" value="Edit Goal"></p>
+</form>
